@@ -205,7 +205,6 @@ export class Renderer {
     this.drawTable(game);
     this.drawCups(game, dt);
     this.drawBall(game);
-    this.drawAim(game);
     this.updateEffects(dt);
     this.drawEffects();
   }
@@ -473,28 +472,37 @@ export class Renderer {
     ctx.fillStyle = '#7a1024';
     ctx.fill();
 
-    const beer = ctx.createRadialGradient(x - rx * 0.2, y - ry * 0.3, ry * 0.1, x, y, rx * 0.9);
-    beer.addColorStop(0, '#ffd27a');
-    beer.addColorStop(0.5, '#f2a63b');
-    beer.addColorStop(1, '#b96a14');
+    // empty cup: dark interior, no beer and no foam
+    const empty = ctx.createRadialGradient(
+      x - rx * 0.18,
+      y - ry * 0.28,
+      ry * 0.08,
+      x,
+      y + ry * 0.12,
+      rx * 0.9,
+    );
+    empty.addColorStop(0, '#3a0d17');
+    empty.addColorStop(0.5, '#21060e');
+    empty.addColorStop(1, '#0b0205');
     ctx.beginPath();
-    ctx.ellipse(x, y + ry * 0.1, rx * 0.82, ry * 0.78, 0, 0, TAU);
-    ctx.fillStyle = beer;
+    ctx.ellipse(x, y + ry * 0.08, rx * 0.84, ry * 0.8, 0, 0, TAU);
+    ctx.fillStyle = empty;
     ctx.fill();
 
-    // foam
-    ctx.fillStyle = 'rgba(255, 246, 220, 0.7)';
-    const foam = [
-      [-0.34, -0.05, 0.18],
-      [-0.02, -0.16, 0.2],
-      [0.3, 0.02, 0.16],
-      [0.08, 0.12, 0.12],
-    ];
-    for (const [fx, fy, fr] of foam) {
-      ctx.beginPath();
-      ctx.arc(x + fx * rx, y + fy * ry, fr * rx, 0, TAU);
-      ctx.fill();
-    }
+    // faint inner-wall reflection
+    ctx.beginPath();
+    ctx.ellipse(
+      x,
+      y + ry * 0.14,
+      rx * 0.7,
+      ry * 0.62,
+      0,
+      Math.PI * 0.15,
+      Math.PI * 0.85,
+    );
+    ctx.strokeStyle = 'rgba(255, 190, 200, 0.14)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
     // rim highlight
     ctx.beginPath();
@@ -578,106 +586,6 @@ export class Renderer {
   }
 
   /* =========================================================
-     Aim
-     ========================================================= */
-
-  drawAim(game) {
-    const aim = game.aim;
-    if (!aim || !aim.active) return;
-    const ctx = this.ctx;
-    const target = this.project(aim.x, aim.z);
-    const accent = '255, 196, 92';
-
-    // predicted arc
-    const launch = this.project(0, 0.03);
-    const arc = 90 + aim.z * 80;
-    ctx.save();
-    for (let i = 1; i <= 15; i += 1) {
-      const t = i / 15;
-      const x = lerp(0, aim.x, t);
-      const z = lerp(0.03, aim.z, t);
-      const p = this.project(x, z);
-      const h = 4 * arc * t * (1 - t);
-      const rr = 1.4 + t * 1.8;
-      ctx.globalAlpha = 0.1 + t * 0.5;
-      ctx.fillStyle = `rgba(${accent}, 0.95)`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y - h, rr, 0, TAU);
-      ctx.fill();
-    }
-    ctx.restore();
-
-    // tether to finger
-    if (aim.sx && aim.sy) {
-      ctx.save();
-      ctx.strokeStyle = `rgba(${accent}, 0.22)`;
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 6]);
-      ctx.beginPath();
-      ctx.moveTo(aim.sx, aim.sy);
-      ctx.lineTo(target.x, target.y);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      ctx.arc(aim.sx, aim.sy, 20, 0, TAU);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // reticle
-    const pulse = this.reducedMotion ? 0 : Math.sin(this.time * 5) * 2;
-    ctx.save();
-    ctx.translate(target.x, target.y);
-    ctx.shadowColor = `rgba(${accent}, 0.7)`;
-    ctx.shadowBlur = 16;
-
-    ctx.strokeStyle = `rgba(${accent}, 0.95)`;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(0, 0, 17 + pulse, 0, TAU);
-    ctx.stroke();
-
-    ctx.globalAlpha = 0.55;
-    ctx.beginPath();
-    ctx.arc(0, 0, 25 + pulse * 1.5, 0, TAU);
-    ctx.stroke();
-
-    ctx.globalAlpha = 1;
-    ctx.lineWidth = 2;
-    for (const [x1, y1, x2, y2] of [
-      [-30, 0, -21, 0],
-      [21, 0, 30, 0],
-      [0, -30, 0, -21],
-      [0, 21, 0, 30],
-    ]) {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    }
-
-    ctx.fillStyle = `rgba(${accent}, 1)`;
-    ctx.beginPath();
-    ctx.arc(0, 0, 3.4, 0, TAU);
-    ctx.fill();
-    ctx.restore();
-
-    // landing line
-    ctx.save();
-    ctx.strokeStyle = `rgba(${accent}, 0.35)`;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(target.x, target.y + 4);
-    ctx.lineTo(target.x, target.y + 16);
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  /* =========================================================
      Effects
      ========================================================= */
 
@@ -696,14 +604,38 @@ export class Renderer {
         t: 0,
         life: rand(0.45, 0.9),
         size: rand(1.4, 4),
-        color: pick(['#ffd166', '#ffb03a', '#fff1cf', '#ff8a3d', '#f7d9a0']),
+        // empty cup: a dry plastic hit, not a beer splash
+        color: pick(['#e8f7ff', '#bfe9ff', '#ffffff', '#9fd8ff', '#dff3ff']),
         shape: 'circle',
         spin: 0,
         rot: 0,
       });
     }
-    this.rings.push({ x, y, t: 0, life: 0.5, r0: 6, r1: 46, color: '255, 210, 130' });
+    this.rings.push({ x, y, t: 0, life: 0.5, r0: 6, r1: 46, color: '190, 230, 255' });
     this.rings.push({ x, y, t: 0, life: 0.65, r0: 2, r1: 28, color: '255, 255, 255' });
+  }
+
+  rimSpark(x, y) {
+    for (let i = 0; i < (this.reducedMotion ? 3 : 9); i += 1) {
+      const angle = -Math.PI / 2 + rand(-1.35, 1.35);
+      const speed = rand(30, 130);
+      this.particles.push({
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed * 0.7,
+        g: 420,
+        drag: 0.985,
+        t: 0,
+        life: rand(0.2, 0.45),
+        size: rand(1, 2.4),
+        color: pick(['#ffd166', '#fff1cf', '#ff8fa3']),
+        shape: 'circle',
+        spin: 0,
+        rot: 0,
+      });
+    }
+    this.rings.push({ x, y, t: 0, life: 0.32, r0: 2, r1: 20, color: '255, 196, 92' });
   }
 
   bounce(x, y) {

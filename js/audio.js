@@ -133,6 +133,13 @@ export class AudioEngine {
         this._noise({ dur: 0.08, gain: 0.04, type: 'highpass', freq: 2400 });
         break;
 
+      case 'cup':
+        // dry plastic cup hit — the cups are empty
+        this._tone(640, { type: 'triangle', dur: 0.12, gain: 0.12, slideTo: 430 });
+        this._noise({ dur: 0.12, gain: 0.08, type: 'bandpass', freq: 1800, q: 1.1 });
+        this._tone(1180, { type: 'sine', dur: 0.08, gain: 0.05, delay: 0.01, slideTo: 900 });
+        break;
+
       case 'splash':
         this._noise({ dur: 0.34, gain: 0.18, type: 'lowpass', freq: 2600, slideTo: 600 });
         this._tone(170, { type: 'sine', dur: 0.26, gain: 0.16, slideTo: 58 });

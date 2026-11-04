@@ -1,7 +1,7 @@
 {
   "name": "Beer Pong — Mesa Neon",
   "short_name": "Beer Pong",
-  "description": "Beer pong neon solo: partida real com 3 chances ou treino infinito. Acerte os 6 copos e bata seu recorde. Funciona offline.",
+  "description": "Beer pong neon solo: partida real com 3 chances ou treino infinito. Copos vazios, física real e bola que quica. Funciona offline.",
   "lang": "pt-BR",
   "dir": "ltr",
   "start_url": "./",

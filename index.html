@@ -41,7 +41,7 @@
   </svg>
 
   <div id="app">
-    <canvas id="scene" aria-label="Mesa de beer pong. Arraste para mirar e solte para arremessar."></canvas>
+    <canvas id="scene" aria-label="Mesa de beer pong. Arraste até o copo e solte para arremessar."></canvas>
 
     <header id="hud" hidden>
       <div class="hud-top">
@@ -85,7 +85,7 @@
 
     <div class="aim-hint" id="aim-hint">
       <span class="aim-hint__hand" aria-hidden="true"></span>
-      Arraste para mirar · solte para arremessar
+      Arraste até o copo · solte para arremessar
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -154,12 +154,12 @@
         <div class="panel">
           <h3><span class="num">1</span> O objetivo</h3>
           <p>Acerte a bolinha nos <strong>6 copos enfileirados na direção do arremesso</strong>. Cada acerto vale <strong>1 ponto</strong>.</p>
-          <p class="muted">Na Partida real os copos ficam na mesa. No Treino eles somem e o rack volta quando você limpar todos.</p>
+          <p class="muted">Os copos estão vazios. Na Partida real eles ficam na mesa; no Treino somem e o rack volta quando você limpar todos.</p>
         </div>
 
         <div class="panel">
           <h3><span class="num">2</span> Controles</h3>
-          <p><strong>Arraste o dedo na mesa</strong> para mover a mira e <strong>solte</strong> para arremessar. A mira aparece um pouco acima do dedo para não ficar escondida.</p>
+          <p><strong>Arraste o dedo até o copo</strong> e <strong>solte</strong> para arremessar. Não existe mira: a bola voa com física de verdade e pode quicar na mesa ou na borda antes de cair.</p>
           <p class="muted">No computador, use o mouse. Funciona com clique, arrasto e soltura.</p>
         </div>
 
@@ -219,14 +219,14 @@
           <button class="text-btn text-btn--danger" id="btn-reset" type="button">Apagar estatísticas</button>
         </div>
 
-        <p class="muted small center">Beer Pong · Mesa Neon v2.1<br>Funciona offline depois de instalado.</p>
+        <p class="muted small center">Beer Pong · Mesa Neon v2.2<br>Funciona offline depois de instalado.</p>
       </div>
     </section>
 
     <section class="screen" id="screen-pause" aria-label="Jogo pausado">
       <div class="screen-inner screen-inner--narrow">
         <div class="pause-badge">PAUSA</div>
-        <h2 class="sheet-title">Respira e mira</h2>
+        <h2 class="sheet-title">Respira e joga</h2>
         <div class="stack">
           <button class="btn btn--primary" id="btn-resume" type="button">Continuar</button>
           <button class="btn btn--soft" id="btn-restart" type="button">

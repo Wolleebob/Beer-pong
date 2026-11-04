@@ -8,12 +8,12 @@ sem dependências e sem backend: HTML, CSS e JavaScript puro.
 ## ✨ Funcionalidades
 
 - **Dois modos**: **Partida real** (3 chances) e **Treino** (rack infinito).
-- **6 copos enfileirados na direção do arremesso**, apontando para a bola.
+- **6 copos vazios enfileirados na direção do arremesso**, apontando para a bola.
 - **Partida real**: cada erro ou borda perde uma chance; ao errar as 3, a partida termina. Os copos **ficam na mesa**.
 - **Treino**: os copos **somem** ao acertar e o rack volta quando todos caem.
 - **Placar em tempo real**: pontos, precisão, sequência e recorde.
-- Física de arremesso com arco, sombra, quique e detecção de borda.
-- Mira por arrasto, com retícula acima do dedo para não tapar o alvo.
+- **Física de verdade**: gravidade, arrasto, quique na mesa e na borda, bola perdendo velocidade até parar.
+- **Sem mira**: arraste até o copo e solte. O arremesso tem um leve tremor de mão.
 - Efeitos sonoros sintetizados (Web Audio), vibração e partículas.
 - Estatísticas e ajustes salvos no dispositivo (`localStorage`).
 - **PWA instalável**, funciona offline e abre em tela cheia.
@@ -30,7 +30,7 @@ sem dependências e sem backend: HTML, CSS e JavaScript puro.
 ├── js/
 │   ├── main.js           # bootstrap, input, loop e registro do SW
 │   ├── game.js           # regras dos modos, pontuação e física
-│   ├── render.js         # canvas 2D: mesa, copos, bola, mira e efeitos
+│   ├── render.js         # canvas 2D: mesa, copos vazios, bola e efeitos
 │   ├── ui.js             # telas, HUD, ajustes e instalação
 │   ├── audio.js          # sons sintetizados
 │   ├── store.js          # persistência local
@@ -145,12 +145,13 @@ Depois de instalado, o jogo abre sem barra de navegador e funciona offline.
 ## 🎮 Como jogar
 
 1. Escolha **Partida real** ou **Treino** no menu.
-2. Arraste o dedo na mesa para posicionar a mira.
-3. Solte para arremessar. A mira fica alguns pixels acima do dedo.
-4. Acerte um dos 6 copos alinhados na direção do arremesso para marcar 1 ponto.
-5. **Partida real:** você tem 3 chances. Cada erro ou borda perde uma chance; ao errar as 3, a partida termina. Os copos ficam na mesa.
-6. **Treino:** arremessos infinitos. Os copos somem ao acertar e o rack é recarregado quando todos caem.
-7. Acertos seguidos aumentam a sequência; errar (ou acertar só a borda) zera.
+2. Arraste o dedo na mesa até o copo que quer acertar.
+3. Solte para arremessar. Não há mira: a bola voa com gravidade, arrasto e tremor de mão.
+4. A bola pode quicar na mesa ou na borda, perder velocidade e ainda cair dentro de um copo.
+5. Acerte a boca de um dos 6 copos vazios alinhados na direção do arremesso para marcar 1 ponto.
+6. **Partida real:** você tem 3 chances. Cada erro ou borda perde uma chance; ao errar as 3, a partida termina. Os copos ficam na mesa.
+7. **Treino:** arremessos infinitos. Os copos somem ao acertar e o rack é recarregado quando todos caem.
+8. Acertos seguidos aumentam a sequência; errar (ou acertar só a borda) zera.
 
 No computador: arraste com o mouse ou use as setas + espaço/Enter.
 
@@ -165,7 +166,7 @@ No computador: arraste com o mouse ou use as setas + espaço/Enter.
 ## ⚠️ Aviso
 
 Conteúdo para maiores de 18 anos. Beba com moderação e nunca dirija depois de
-beber. O jogo funciona perfeitamente com água — a diversão é a mira. 🏓
+beber. O jogo funciona perfeitamente com água — a diversão é o arremesso. 🏓
 
 ## 📄 Licença
 
