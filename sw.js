@@ -1,5 +1,5 @@
 /* Beer Pong — Mesa Neon · Service Worker */
-const VERSION = '2.2.0';
+const VERSION = '2.2.1';
 const CACHE = `beerpong-neon-${VERSION}`;
 
 const ASSETS = [
@@ -25,7 +25,22 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.addAll(ASSETS))
+      .then((cache) =>
+        Promise.all(
+          ASSETS.map(async (url) => {
+            // Bypass the HTTP cache so a new service worker never stores
+            // stale JS/CSS from the previous version.
+            const request = new Request(new URL(url, self.location).href, {
+              cache: 'reload',
+            });
+            const response = await fetch(request);
+            if (!response || !response.ok) {
+              throw new Error(`Falha ao cachear ${url}`);
+            }
+            await cache.put(request, response);
+          }),
+        ),
+      )
       .then(() => self.skipWaiting()),
   );
 });

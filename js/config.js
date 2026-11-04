@@ -1,4 +1,4 @@
-export const APP_VERSION = '2.2.0';
+export const APP_VERSION = '2.2.1';
 export const STORAGE_KEY = 'beerpong.neon.v1';
 
 export const CUP_COUNT = 6;
